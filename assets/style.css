@@ -216,38 +216,107 @@ video.lv{width:100%;height:100%;object-fit:cover;background:#0d1417}
   .stats li:nth-child(3){padding-left:0;border-left:0}
 }
 
-/* ---------- ONE DAY ---------- */
-.day{position:relative;background:var(--sand)}
-.day-pin{padding:clamp(90px,12vh,130px) 0 clamp(70px,10vh,110px)}
-.day-head{display:grid;grid-template-columns:auto 1fr;column-gap:clamp(30px,6vw,90px);align-items:end;margin-bottom:clamp(30px,4vh,48px)}
-.day-head .eyebrow{grid-column:1/-1}
-.day-head .lead{margin:0 0 6px}
-.day-progress{grid-column:1/-1;height:1px;background:var(--line);margin-top:28px;overflow:hidden}
-.day-progress i{display:block;height:100%;background:var(--shu);transform-origin:left;transform:scaleX(0)}
-.day-track{display:flex;gap:clamp(18px,2vw,30px);padding:0 var(--gut);scroll-padding-inline:var(--gut);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.day-track::-webkit-scrollbar{display:none}
-.dcard{flex:0 0 clamp(250px,24vw,370px);scroll-snap-align:start}
-.dcard-media{height:min(46vh,440px);border-radius:var(--r);overflow:hidden;background:#e4dccf;margin-bottom:18px;box-shadow:0 24px 50px -36px rgba(34,48,58,.45)}
-.dcard-media img,.dcard-media video{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
-.dcard:hover .dcard-media img,.dcard:hover .dcard-media video{transform:scale(1.04)}
-.dcard-time{font-family:var(--en);font-size:34px;line-height:1;color:var(--shu);margin-bottom:8px}
-.dcard h3{font-family:var(--serif);font-weight:500;font-size:19px;letter-spacing:.06em;margin-bottom:6px}
-.dcard p:last-child{font-size:13.5px;line-height:1.9;color:var(--muted)}
-.dcard-end{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:24px;padding:0 clamp(10px,3vw,40px)}
-.dcard-end p:first-child{font-family:var(--serif);font-size:clamp(24px,2.4vw,34px);line-height:1.6;letter-spacing:.08em;color:var(--text)}
-/* PCはスクロールに合わせて横に流す */
-.pin-on .day-pin{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:calc(var(--hd) + 4px) 0 24px}
-.pin-on .day-track{overflow:visible;scroll-snap-type:none;will-change:transform}
-.pin-on .day-head{margin-bottom:clamp(22px,3vh,40px)}
-.pin-on .day-head .h2 br{display:none}
-.pin-on .day-head .eyebrow{margin-bottom:10px}
-.pin-on .day-progress{margin-top:20px}
-.pin-on .dcard-media{height:min(40vh,420px)}
-@media (max-width:767px){
-  .day-head{grid-template-columns:1fr}
-  .day-head .lead{margin-top:18px}
-  .dcard{flex-basis:76vw}
-  .dcard-media{height:auto;aspect-ratio:4/5}
+/* ---------- ひとコマ（チェックインから翌朝まで） ----------
+   data-ch（1〜6）で背景の色が「昼→夕方→夜→深夜→朝→チェックアウト」と変わる */
+.day{--fg:var(--text);--mu:var(--muted);--ln:var(--line);--ac:var(--shu);--hdh:66px;--barh:74px;
+  position:relative;background-color:#f1eadf;color:var(--fg);padding-top:clamp(100px,14vh,160px);
+  transition:background-color 1.2s ease,color 1.2s ease}
+.day[data-ch="2"]{background-color:#f4e3cf}
+.day[data-ch="3"],.day[data-ch="4"]{--fg:#efe9df;--mu:rgba(239,233,223,.72);--ln:rgba(239,233,223,.16);--ac:var(--sun)}
+.day[data-ch="3"]{background-color:#16242d}
+.day[data-ch="4"]{background-color:#0b141a}
+.day[data-ch="5"]{background-color:#e9f0ef;--ac:var(--sea)}
+.day[data-ch="6"]{background-color:var(--paper)}
+.day .eyebrow,.ch-no,.mo-time,.dbar-time{color:var(--ac);transition:color 1.2s ease}
+.day .lead,.ch-lead,.mo p,.dbar-stops a,.day-note{color:var(--mu);transition:color 1.2s ease}
+.day-intro{display:grid;grid-template-columns:auto 1fr;column-gap:clamp(30px,6vw,90px);align-items:end;padding-bottom:clamp(40px,6vh,64px)}
+.day-intro .eyebrow{grid-column:1/-1}
+.day-intro .lead{margin:0 0 8px}
+
+/* 上に残る時刻のバー */
+.dbar{position:sticky;top:var(--hdh);z-index:20;background-color:inherit;border-top:1px solid var(--ln);border-bottom:1px solid var(--ln);transition:border-color 1.2s ease}
+.dbar-in{display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:clamp(20px,3vw,48px);height:var(--barh)}
+.dbar-now{display:flex;align-items:baseline;gap:12px;min-width:200px;margin:0}
+.dbar-time{font-family:var(--en);font-size:38px;line-height:1;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.dbar-label{font-size:13px;letter-spacing:.14em;white-space:nowrap}
+.dbar-track{position:relative;align-self:stretch;display:flex;align-items:center}
+.dbar-stops{display:grid;grid-template-columns:repeat(6,1fr);width:100%;text-align:center;font-size:11.5px;letter-spacing:.08em;line-height:1.4;padding-bottom:12px}
+.dbar-stops a{display:block;padding:4px 2px}
+.dbar-stops a:hover,.dbar-stops a.on{color:var(--fg)}
+.dbar-stops b{display:block;font-family:var(--en);font-weight:400;font-size:16px;letter-spacing:.02em}
+.dbar-line{position:absolute;left:0;right:0;bottom:12px;height:1px;background:var(--ln);transition:background 1.2s ease}
+.dbar-fill{position:absolute;inset:0;background:var(--ac);transform-origin:left;transform:scaleX(.083);transition:background 1.2s ease}
+.dbar-orb{position:absolute;top:0;left:8.3%;width:13px;height:13px;margin:-6px 0 0 -6.5px;border-radius:50%;background:#f2b65f;box-shadow:0 0 0 4px rgba(242,182,95,.22),0 0 16px 2px rgba(242,182,95,.75);transition:background .8s,box-shadow .8s}
+.dbar-orb.moon{background:#f3efe4;box-shadow:inset -4px -1px 0 0 #b9c0c6,0 0 0 4px rgba(243,239,228,.12),0 0 16px 2px rgba(243,239,228,.45)}
+
+/* 各時間帯 */
+.days{padding-bottom:clamp(80px,11vh,130px)}
+.ch{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:clamp(30px,5.5vw,96px);padding-top:clamp(70px,10vh,120px);scroll-margin-top:calc(var(--hdh) + var(--barh))}
+.ch-head{position:sticky;top:calc(var(--hdh) + var(--barh) + 36px);align-self:start}
+.ch-no{font-family:var(--en);font-style:italic;font-size:20px;letter-spacing:.02em;margin-bottom:4px}
+.ch-time{font-family:var(--en);font-size:clamp(64px,7.4vw,116px);line-height:1;letter-spacing:.01em;font-variant-numeric:tabular-nums}
+.ch-title{font-family:var(--serif);font-weight:500;font-size:clamp(24px,2.5vw,34px);line-height:1.6;letter-spacing:.06em;margin:20px 0 16px}
+.ch-lead{font-size:15px;line-height:2.05;max-width:25em}
+.ch-body{display:grid;grid-template-columns:1fr 1fr;gap:clamp(36px,4vw,56px) clamp(16px,2vw,28px);align-content:start}
+.mo{min-width:0}
+.mo-wide{grid-column:1/-1}
+.mo-media{position:relative;aspect-ratio:4/3;border-radius:var(--r);overflow:hidden;background:rgba(120,120,120,.16);margin-bottom:18px;box-shadow:0 28px 54px -40px rgba(0,0,0,.6)}
+.mo-wide .mo-media{aspect-ratio:16/9}
+.mo-media img,.mo-media video{width:100%;height:100%;object-fit:cover}
+.mo-time{display:flex;align-items:center;gap:12px;font-family:var(--en);font-size:26px;line-height:1;margin-bottom:10px;font-variant-numeric:tabular-nums}
+.mo h4{font-family:var(--serif);font-weight:500;font-size:clamp(18px,1.6vw,21px);line-height:1.55;letter-spacing:.05em;margin-bottom:6px}
+.mo p:not(.mo-time){font-size:14px;line-height:1.95}
+.tag{font-family:var(--sans);font-size:11px;letter-spacing:.14em;line-height:1;padding:5px 10px;border-radius:999px;border:1px solid currentColor}
+.mo-season{display:inline-flex;align-items:center;gap:12px;margin-top:14px;padding:8px 18px 8px 8px;border-radius:999px;background:#fff;color:var(--text)!important;box-shadow:0 10px 26px -18px rgba(34,48,58,.6)}
+.mo-season span{font-size:11px;letter-spacing:.14em;padding:4px 10px;border-radius:999px;background:var(--shu);color:#fff;font-weight:700}
+.bf{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px;max-width:520px}
+.bf li{font-size:12px;letter-spacing:.06em;text-align:center;line-height:1.5;color:var(--mu)}
+.bf img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:4px;margin-bottom:6px}
+.bf-more{display:grid;place-items:center;aspect-ratio:1;border-radius:4px;border:1px dashed currentColor;font-size:13px;line-height:1.6;color:var(--fg)}
+
+/* 夜（星空 → 夜明け）。スクロールすると時刻が22:00から朝まで進む */
+.night{grid-column:1/-1;position:relative;min-height:125vh;border-radius:var(--r);overflow:hidden;isolation:isolate;
+  background:linear-gradient(180deg,#070d12 0%,#0b1620 40%,#15263a 62%,#3b3f5c 76%,#a0687a 88%,#e7a272 97%,#f2c48d 100%)}
+.night-stars{position:absolute;inset:0 0 30% 0;z-index:-1;background-image:
+  radial-gradient(1.4px 1.4px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 28% 8%,#fff,transparent),
+  radial-gradient(1.2px 1.2px at 46% 22%,#fff,transparent),radial-gradient(1px 1px at 63% 12%,#fff,transparent),
+  radial-gradient(1.6px 1.6px at 78% 28%,#fff,transparent),radial-gradient(1px 1px at 90% 9%,#fff,transparent),
+  radial-gradient(1px 1px at 8% 44%,#fff,transparent),radial-gradient(1.3px 1.3px at 35% 40%,#fff,transparent),
+  radial-gradient(1px 1px at 57% 52%,#fff,transparent),radial-gradient(1.2px 1.2px at 84% 48%,#fff,transparent),
+  radial-gradient(1px 1px at 20% 64%,#fff,transparent),radial-gradient(1px 1px at 70% 70%,#fff,transparent);
+  opacity:.85;animation:twinkle 5s ease-in-out infinite alternate}
+.night-stars.s2{transform:translate(6%,4%) scale(1.1);opacity:.5;animation-delay:-2.5s}
+@keyframes twinkle{from{opacity:.35}to{opacity:.9}}
+.night-moon{position:absolute;top:9%;right:14%;width:46px;height:46px;border-radius:50%;background:#f3efe4;box-shadow:inset -12px -4px 0 0 #c9ccd0,0 0 40px 6px rgba(243,239,228,.25)}
+.night-copy{position:absolute;top:30%;left:0;right:0;text-align:center;font-family:var(--serif);font-size:clamp(20px,2vw,26px);line-height:2.2;letter-spacing:.3em;color:rgba(239,233,223,.82)}
+.night-dawn{position:absolute;left:0;right:0;bottom:15%;text-align:center;font-size:13.5px;line-height:2;letter-spacing:.12em;color:#fff;text-shadow:0 1px 10px rgba(80,40,30,.45)}
+.night-sun{position:absolute;left:50%;bottom:-58px;width:120px;height:120px;margin-left:-60px;border-radius:50%;background:radial-gradient(circle,#fff6df 0%,#ffd79a 45%,rgba(255,190,120,0) 72%)}
+
+/* チェックアウト */
+.mo-end{position:relative}
+.mo-end .mo-media{aspect-ratio:16/10;margin-bottom:0}
+.mo-cta{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:clamp(20px,3vw,36px);background:linear-gradient(0deg,rgba(10,16,20,.6),rgba(10,16,20,0));border-radius:0 0 var(--r) var(--r);color:#fff}
+.mo-cta p{font-family:var(--serif);font-size:clamp(20px,2vw,26px)!important;letter-spacing:.08em;color:#fff!important;text-shadow:0 1px 14px rgba(0,0,0,.4)}
+.day-note{margin-top:clamp(56px,8vh,90px);font-size:12.5px;line-height:1.8}
+
+@media (max-width:899px){
+  .day{--barh:58px}
+  .day-intro{grid-template-columns:1fr}
+  .day-intro .lead{margin-top:18px}
+  .dbar-in{grid-template-columns:auto 1fr;column-gap:18px}
+  .dbar-now{min-width:0;gap:10px}
+  .dbar-time{font-size:28px}
+  .dbar-label{font-size:12px}
+  .dbar-stops{display:none}
+  .dbar-line{position:relative;bottom:auto;width:100%}
+  .ch{grid-template-columns:1fr;padding-top:clamp(64px,9vh,90px)}
+  .ch-head{position:static;margin-bottom:30px}
+  .ch-time{font-size:64px}
+  .ch-body{grid-template-columns:1fr;gap:40px}
+  .mo-media,.mo-wide .mo-media{aspect-ratio:16/10}
+  .night{min-height:105vh}
+  .mo-end .mo-media{aspect-ratio:4/5}
+  .mo-cta{flex-direction:column;align-items:flex-start}
 }
 
 /* ---------- STAY ---------- */

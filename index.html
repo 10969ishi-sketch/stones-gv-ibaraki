@@ -51,7 +51,7 @@
   <img class="menu-bg" src="img/loop-waves.jpg" alt="" loading="lazy">
   <nav class="menu-nav" aria-label="スマホ用メニュー">
     <a href="#concept"><em>Concept</em>はじめての方へ</a>
-    <a href="#day"><em>One Day</em>ここでの過ごし方</a>
+    <a href="#day"><em>One Day</em>ここで過ごす、ひとコマ</a>
     <a href="#stay"><em>Stay</em>客室</a>
     <a href="#sauna"><em>Sauna</em>サウナ</a>
     <a href="#spa"><em>Spa</em>温浴施設 湯かっぺ</a>
@@ -120,57 +120,200 @@
   </div>
 </section>
 
-<!-- ===== ONE DAY（横に流れるフィルム） ===== -->
-<section class="day light" id="day">
-  <div class="day-pin">
-    <div class="day-head wrap">
-      <p class="eyebrow rv">One Day</p>
-      <h2 class="h2 rv">ここで過ごす、<br>ある一日。</h2>
-      <p class="lead rv">チェックインから翌朝まで。海のそばの時間を、映像でたどります。</p>
-      <div class="day-progress" aria-hidden="true"><i></i></div>
-    </div>
-    <div class="day-track" tabindex="0" aria-label="一日の流れ（横にスクロールできます）">
-      <article class="dcard">
-        <div class="dcard-media"><img src="img/photo/front-1.jpg" alt="海が見えるフロントラウンジ" loading="lazy"></div>
-        <p class="dcard-time">15:00</p><h3>チェックイン</h3><p>海風に迎えられて到着。荷物を置いたら、まずはデッキで深呼吸。</p>
-      </article>
-      <article class="dcard">
-        <div class="dcard-media"><video class="lv" data-src="media/loop-barrel.mp4" poster="img/loop-barrel.jpg" muted loop playsinline preload="none" aria-hidden="true"></video></div>
-        <p class="dcard-time">16:30</p><h3>海辺のサウナで、ととのう</h3><p>バレルサウナ→水風呂→外気浴。水平線を眺めながらの休憩は格別です。</p>
-      </article>
-      <article class="dcard">
-        <div class="dcard-media"><video class="lv" data-src="media/loop-seafood.mp4" poster="img/loop-seafood.jpg" muted loop playsinline preload="none" aria-hidden="true"></video></div>
-        <p class="dcard-time">18:00</p><h3>波音を聞きながらBBQ</h3><p>お部屋の専用スペースで、常陸牛やエビ・ホタテなど海の幸をたっぷりと。</p>
-      </article>
-      <article class="dcard">
-        <div class="dcard-media"><img src="img/photo/spa-2.jpg" alt="海の見える大浴場" loading="lazy"></div>
-        <p class="dcard-time">20:00</p><h3>湯かっぺで、ひと風呂</h3><p>宿泊の方は何度でも無料。炭酸泉でゆっくり温まって。</p>
-      </article>
-      <article class="dcard">
-        <div class="dcard-media"><video class="lv" data-src="media/loop-fire.mp4" poster="img/loop-fire.jpg" muted loop playsinline preload="none" aria-hidden="true"></video></div>
-        <p class="dcard-time">21:00</p><h3>焚き火を囲む夜</h3><p>星空の下、火を見ながら語り合う。グランピングの醍醐味です。</p>
-      </article>
-      <article class="dcard">
-        <div class="dcard-media"><video class="lv" data-src="media/loop-sunrise.mp4" poster="img/loop-sunrise.jpg" muted loop playsinline preload="none" aria-hidden="true"></video></div>
-        <p class="dcard-time">05:30</p><h3>太平洋から昇る朝日</h3><p>東向きの海だから見られる、水平線からの日の出。二ツ島の向こうが染まっていきます。</p>
-      </article>
-      <article class="dcard">
-        <div class="dcard-media"><video class="lv" data-src="media/loop-coffee.mp4" poster="img/loop-coffee.jpg" muted loop playsinline preload="none" aria-hidden="true"></video></div>
-        <p class="dcard-time">06:30</p><h3>海を見ながら、一杯</h3><p>波の音を聞きながら、デッキでモーニングコーヒー。</p>
-      </article>
-      <article class="dcard">
-        <div class="dcard-media"><video class="lv" data-src="media/loop-breakfast.mp4" poster="img/loop-breakfast.jpg" muted loop playsinline preload="none" aria-hidden="true"></video></div>
-        <p class="dcard-time">08:00</p><h3>選べる朝ごはん</h3><p>大津港のしらす丼、手作りハンバーガー、サムゲタンから選べます。</p>
-      </article>
-      <article class="dcard">
-        <div class="dcard-media"><img src="img/photo/dome-2.jpg" alt="ドームの窓から見る朝の海と二ツ島" loading="lazy"></div>
-        <p class="dcard-time">10:00</p><h3>朝湯のあとで、チェックアウト</h3><p>また海に会いに来てください。</p>
-      </article>
-      <div class="dcard dcard-end">
-        <p>次の休みは、<br>海のそばで。</p>
-        <a class="btn btn-shu" href="https://reserve.489ban.net/client/gv-ibaraki/0/plan" target="_blank" rel="noopener">空室を見る</a>
+<!-- ===== ひとコマ（チェックインから翌朝のチェックアウトまで） =====
+     読み進めると、上のバーの時刻が進み、背景の色が「昼→夕方→夜→夜明け→朝」と変わる。
+     data-t は時刻（分）。翌日は +1440（例：翌朝7:00 = 1860） -->
+<section class="day" id="day" data-ch="1" aria-labelledby="day-title">
+  <div class="day-intro wrap">
+    <p class="eyebrow rv">A Day at the Village</p>
+    <h2 class="h2 rv" id="day-title">グランピング<br class="sp-only">ヴィレッジで<br>過ごす、ひとコマ。</h2>
+    <p class="lead rv">チェックインから、翌朝のチェックアウトまで。ここでの一日を、時間の流れに沿ってご紹介します。はじめての方も、どんなふうに過ごすか思い描いてみてください。</p>
+  </div>
+
+  <nav class="dbar" aria-label="一日の流れ">
+    <div class="dbar-in wrap">
+      <p class="dbar-now" aria-hidden="true"><span class="dbar-time">15:00</span><span class="dbar-label">チェックイン</span></p>
+      <div class="dbar-track">
+        <ol class="dbar-stops">
+          <li><a href="#ch-checkin" class="on"><b>15:00</b>チェックイン</a></li>
+          <li><a href="#ch-free"><b>16:00</b>夕食まで</a></li>
+          <li><a href="#ch-night"><b>18:00</b>夕食・夜</a></li>
+          <li><a href="#ch-sleep"><b>22:00</b>就寝</a></li>
+          <li><a href="#ch-morning"><b>07:00</b>朝</a></li>
+          <li><a href="#ch-out"><b>10:00</b>チェックアウト</a></li>
+        </ol>
+        <div class="dbar-line" aria-hidden="true"><i class="dbar-fill"></i><span class="dbar-orb"></span></div>
       </div>
     </div>
+  </nav>
+
+  <div class="days wrap">
+
+    <!-- 01 チェックイン -->
+    <article class="ch" id="ch-checkin" data-label="チェックイン" data-t="900">
+      <header class="ch-head">
+        <p class="ch-no">01 — Check-in</p>
+        <p class="ch-time">15:00</p>
+        <h3 class="ch-title">ようこそ。<br>まずは、甘いひと息を。</h3>
+        <p class="ch-lead">海の見えるフロントに着いたら、季節のウェルカムスイーツでひと休み。そのあとスタッフがお部屋をご紹介して、チェックインです。</p>
+      </header>
+      <div class="ch-body">
+        <div class="mo mo-wide rv" data-t="900">
+          <div class="mo-media"><img src="img/photo/front-1.jpg" alt="海が見える明るいフロントラウンジ" loading="lazy"></div>
+          <p class="mo-time">15:00</p>
+          <h4>ウェルカムスイーツで、お出迎え</h4>
+          <p>到着したら、まずはフロントでひと息。季節ごとに替わる、手づくりのウェルカムスイーツをご用意しています。</p>
+          <p class="mo-season"><span>いまの季節</span>旬の芋を使った「大学芋」</p>
+        </div>
+        <div class="mo mo-wide rv" data-t="915">
+          <div class="mo-media"><video class="lv" data-once data-src="media/once-curtain.mp4" poster="img/once-curtain.jpg" data-end="img/once-curtain-end.jpg" muted playsinline preload="none" aria-label="お部屋のカーテンを開けると、窓の外に海が広がる"></video></div>
+          <p class="mo-time">15:15</p>
+          <h4>お部屋をご紹介して、チェックイン</h4>
+          <p>スタッフがお部屋までご案内して、過ごし方をご紹介します。カーテンを開ければ、窓の外はすぐ海。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 02 夕食までの時間 -->
+    <article class="ch" id="ch-free" data-label="夕食までの時間" data-t="960">
+      <header class="ch-head">
+        <p class="ch-no">02 — Free time</p>
+        <p class="ch-time">16:00</p>
+        <h3 class="ch-title">夕食までは、<br>海とあそぶ。</h3>
+        <p class="ch-lead">荷物を置いたら、堤防の向こうの海へ。波打ち際を歩いたり、近くのスポットへ出かけたり。何もせず、海を眺めているのもいい時間です。</p>
+      </header>
+      <div class="ch-body">
+        <div class="mo mo-wide rv" data-t="960">
+          <div class="mo-media"><video class="lv" data-src="media/loop-seawalk.mp4" poster="img/loop-seawalk.jpg" muted loop playsinline preload="none" aria-label="堤防から打ち寄せる波を眺める親子"></video></div>
+          <p class="mo-time">16:00</p>
+          <h4>すぐそこの海を、お散歩</h4>
+          <p>海までは歩いて1分。潮風に吹かれながら、波の音を聞いてのんびりと。</p>
+        </div>
+        <div class="mo rv" data-t="990">
+          <div class="mo-media"><video class="lv" data-src="media/loop-islands.mp4" poster="img/loop-islands.jpg" muted loop playsinline preload="none" aria-label="空から見た二ツ島と磯原の海岸"></video></div>
+          <p class="mo-time">16:30</p>
+          <h4>近くのスポットへ</h4>
+          <p>二ツ島海水浴場までは歩いて3分。少し足をのばせば、五浦海岸の六角堂や野口雨情記念館など、北茨城の見どころへも。</p>
+        </div>
+        <div class="mo rv">
+          <div class="mo-media"><video class="lv" data-src="media/loop-pizza.mp4" poster="img/loop-pizza.jpg" muted loop playsinline preload="none" aria-hidden="true"></video></div>
+          <p class="mo-time"><span class="tag">敷地内で</span></p>
+          <h4>ピザ窯で、手作りピザ</h4>
+          <p>敷地内で過ごすなら、自分だけのピザを焼く体験も。15:30〜17:00・1,100円（要予約）。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 03 夕食・夜 -->
+    <article class="ch" id="ch-night" data-label="夕食・夜" data-t="1080">
+      <header class="ch-head">
+        <p class="ch-no">03 — Dinner &amp; Night</p>
+        <p class="ch-time">18:00</p>
+        <h3 class="ch-title">BBQのあとは、<br>お風呂とサウナへ。</h3>
+        <p class="ch-lead">夕食は、お部屋ごとの専用スペースでBBQ。おなかが満たされたら、お風呂とサウナで体をほどいて。お部屋に戻ってからの夜も、ここでの楽しみです。</p>
+      </header>
+      <div class="ch-body">
+        <div class="mo mo-wide rv" data-t="1080">
+          <div class="mo-media"><video class="lv" data-src="media/loop-seafood.mp4" poster="img/loop-seafood.jpg" muted loop playsinline preload="none" aria-label="BBQで焼かれるホタテやエビ"></video></div>
+          <p class="mo-time">18:00</p>
+          <h4>波の音を聞きながら、BBQ</h4>
+          <p>常陸牛や、エビ・ホタテなどの海の幸を焼きたてで。</p>
+        </div>
+        <div class="mo rv" data-t="1170">
+          <div class="mo-media"><video class="lv" data-src="media/loop-barrel.mp4" poster="img/loop-barrel.jpg" muted loop playsinline preload="none" aria-label="夜のバレルサウナ"></video></div>
+          <p class="mo-time">19:30</p>
+          <h4>お風呂に入って、サウナでととのう</h4>
+          <p>海の見える温浴施設「湯かっぺ」は、宿泊の方なら何度でも無料。サウナで汗を流して、ゆっくり温まって。</p>
+        </div>
+        <div class="mo rv" data-t="1230">
+          <div class="mo-media"><video class="lv" data-src="media/loop-toys.mp4" poster="img/loop-toys.jpg" muted loop playsinline preload="none" aria-label="木のおもちゃのブロックを船の上に積んで遊ぶ手元"></video></div>
+          <p class="mo-time">20:30</p>
+          <h4>お部屋で、アナログなおもちゃ遊び</h4>
+          <p>スマホを置いて、木のおもちゃで遊ぶ夜。思わず家族みんなが夢中になります。</p>
+        </div>
+        <div class="mo mo-wide rv" data-t="1260">
+          <div class="mo-media"><video class="lv" data-src="media/loop-fire.mp4" poster="img/loop-fire.jpg" muted loop playsinline preload="none" aria-label="夜の焚き火"></video></div>
+          <p class="mo-time">21:00<span class="tag">冬は</span></p>
+          <h4>焚き火を囲む夜</h4>
+          <p>冬の夜は、焚き火も楽しめます。火を眺めながら、ゆっくり語り合う時間を。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 04 就寝 -->
+    <article class="ch" id="ch-sleep" data-label="就寝" data-t="1320">
+      <header class="ch-head">
+        <p class="ch-no">04 — Good night</p>
+        <p class="ch-time">22:00</p>
+        <h3 class="ch-title">波の音を聞きながら、<br>おやすみなさい。</h3>
+        <p class="ch-lead">灯りを落とすと、聞こえるのは波の音だけ。いつもより少し早く眠って、明日の朝に備えましょう。</p>
+      </header>
+      <div class="ch-body">
+        <div class="night" aria-hidden="true" data-t="1320">
+          <i class="night-stars"></i><i class="night-stars s2"></i><span class="night-moon"></span>
+          <p class="night-copy">ザザー…<br>ザザー…</p>
+          <p class="night-dawn" data-t="1800">東向きの海なので、<br>晴れた朝は、水平線から朝日が昇ります。</p>
+          <span class="night-sun"></span>
+        </div>
+      </div>
+    </article>
+
+    <!-- 05 朝 -->
+    <article class="ch" id="ch-morning" data-label="朝" data-t="1860">
+      <header class="ch-head">
+        <p class="ch-no">05 — Morning</p>
+        <p class="ch-time">07:00</p>
+        <h3 class="ch-title">朝風呂、朝ごはん、<br>そしてひなたぼっこ。</h3>
+        <p class="ch-lead">お風呂は朝7時から。海を眺めながらの朝風呂で目を覚まして、5種類から選べる朝ごはんを。チェックアウトまでは、太陽の光を浴びながらのんびりと。</p>
+      </header>
+      <div class="ch-body">
+        <div class="mo mo-wide rv" data-t="1860">
+          <div class="mo-media"><img src="img/photo/spa-1.jpg" alt="窓いっぱいに海が広がる湯かっぺの浴槽" loading="lazy"></div>
+          <p class="mo-time">07:00</p>
+          <h4>海を眺めながら、ゆっくり朝風呂</h4>
+          <p>湯かっぺは朝7時から入れます。窓いっぱいの海と朝の光の中で、ゆっくりと。</p>
+        </div>
+        <div class="mo mo-wide rv" data-t="1920">
+          <div class="mo-media"><video class="lv" data-src="media/loop-breakfast.mp4" poster="img/loop-breakfast.jpg" muted loop playsinline preload="none" aria-label="大津港のしらす丼の朝ごはん"></video></div>
+          <p class="mo-time">08:00</p>
+          <h4>朝ごはんは、5種類から選べる</h4>
+          <p>その日の気分で選べる朝ごはん。大津港のしらす丼、手作りハンバーガー、サムゲタンなど。</p>
+          <ul class="bf">
+            <li><img src="img/photo/bf-shirasu.jpg" alt="" loading="lazy">しらす丼</li>
+            <li><img src="img/photo/bf-burger.jpg" alt="" loading="lazy">ハンバーガー</li>
+            <li><img src="img/photo/bf-samgyetang.jpg" alt="" loading="lazy">サムゲタン</li>
+            <li><span class="bf-more">ほか<br>2種</span></li>
+          </ul>
+        </div>
+        <div class="mo mo-wide rv" data-t="1980">
+          <div class="mo-media"><video class="lv" data-src="media/loop-mugs.mp4" poster="img/loop-mugs.jpg" muted loop playsinline preload="none" aria-label="デッキに並んだマグカップと、朝の光に光る海"></video></div>
+          <p class="mo-time">09:00</p>
+          <h4>太陽の光を浴びて、海を眺める</h4>
+          <p>チェックアウトまでは、デッキでひなたぼっこ。コーヒーを片手に、ただ海を眺める贅沢な時間です。</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 06 チェックアウト -->
+    <article class="ch" id="ch-out" data-label="チェックアウト" data-t="2040">
+      <header class="ch-head">
+        <p class="ch-no">06 — Check-out</p>
+        <p class="ch-time">10:00</p>
+        <h3 class="ch-title">また、海に<br>会いに来てください。</h3>
+        <p class="ch-lead">チェックアウトは10:00。チェックアウトの日も、湯かっぺは無料でご利用いただけます。</p>
+      </header>
+      <div class="ch-body">
+        <div class="mo mo-wide mo-end rv">
+          <div class="mo-media"><img src="img/photo/dome-2.jpg" alt="ドームの大きな窓から見える朝の海と二ツ島" loading="lazy"></div>
+          <div class="mo-cta">
+            <p>次の休みは、海のそばで。</p>
+            <a class="btn btn-shu" href="https://reserve.489ban.net/client/gv-ibaraki/0/plan" target="_blank" rel="noopener">空室を見る・予約する</a>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <p class="day-note">※時間は過ごし方の一例です。お食事・お風呂・サウナの時間や内容は、季節やプランによって変わります。</p>
   </div>
 </section>
 
@@ -357,7 +500,7 @@
       <p class="lead rv">温浴施設「湯かっぺ」は、建物2階の絶景風呂。窓いっぱいに広がる太平洋を眺めながら、炭酸泉と「かわり湯」で旅の疲れを癒せます。名前の由来は、茨城弁で「いいね」を意味する「いかっぺ」。</p>
       <dl class="spa-list rv">
         <div><dt>宿泊の方</dt><dd><b>無料</b>・滞在中もチェックアウト日も、何度でも</dd></div>
-        <div><dt>営業時間</dt><dd>平日 8:00〜10:00／15:00〜21:00<br>土日祝 8:00〜21:00（最終入館20:30）</dd></div>
+        <div><dt>営業時間</dt><dd>平日 7:00〜10:00／15:00〜21:00<br>土日祝 7:00〜21:00（最終入館20:30）</dd></div>
         <div><dt>日帰り入浴</dt><dd>15:00〜21:00／大人1,000円・小学生以下500円・3歳以下無料</dd></div>
         <div><dt>くつろぎ</dt><dd>リラックステラス（マンガ 約5,000冊・足湯）</dd></div>
       </dl>
@@ -410,7 +553,7 @@
 
     <div class="breakfast rv">
       <div class="breakfast-media"><video class="lv" data-src="media/loop-breakfast.mp4" poster="img/loop-breakfast.jpg" muted loop playsinline preload="none" aria-hidden="true"></video></div>
-      <div><p class="eyebrow">Breakfast</p><h3 class="h3">朝ごはんは、3種類から。</h3><p>手作りハンバーガー／大津港のしらす丼と味噌汁／サムゲタン朝食セット。お子さまの朝食が無料になるプランもあります。</p></div>
+      <div><p class="eyebrow">Breakfast</p><h3 class="h3">朝ごはんは、5種類から。</h3><p>大津港のしらす丼と味噌汁、手作りハンバーガー、サムゲタン朝食セットなど、5種類から選べます。お子さまの朝食が無料になるプランもあります。</p></div>
     </div>
 
     <h3 class="h3 acts-title rv">夜を楽しむ、4つの体験</h3>
@@ -552,7 +695,7 @@
     </div>
     <div class="faq-list">
       <details class="rv"><summary>チェックイン・チェックアウトの時間は？</summary><p>チェックインは15:00〜20:00、チェックアウトは10:00です。18:00を過ぎる場合はご連絡ください。【18:00まで】050-3181-6268／【18:00以降】0293-44-7555</p></details>
-      <details class="rv"><summary>温浴施設「湯かっぺ」は利用できますか？</summary><p>ご宿泊のお客様は、滞在中・チェックアウト日も無料で何度でもご利用いただけます。平日 8:00〜10:00／15:00〜21:00、土日祝 8:00〜21:00（最終入館20:30）</p></details>
+      <details class="rv"><summary>温浴施設「湯かっぺ」は利用できますか？</summary><p>ご宿泊のお客様は、滞在中・チェックアウト日も無料で何度でもご利用いただけます。平日 7:00〜10:00／15:00〜21:00、土日祝 7:00〜21:00（最終入館20:30）</p></details>
       <details class="rv"><summary>ペットと一緒に泊まれますか？</summary><p>ドッグトレーラーのみペット同伴でご宿泊いただけます。専用のドッグラン、犬用ベッド・食器・トイレトレーなどをご用意しています。</p></details>
       <details class="rv"><summary>バレルサウナは誰でも使えますか？</summary><p>ご宿泊のお客様向けのオプションです（1枠50分・1グループ2,200円、15:30〜19:30の5枠）。水着を着用してご利用ください。日帰りでご利用いただけるプライベートバレルサウナのプランもございます。</p></details>
       <details class="rv"><summary>パジャマやアメニティはありますか？</summary><p>ボディソープ、シャンプー、リンス、ドライヤー、歯ブラシセット、タオル類、綿棒をご用意しています。パジャマのご用意はございませんので、ご持参ください。</p></details>

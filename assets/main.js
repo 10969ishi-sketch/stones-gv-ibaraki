@@ -123,7 +123,9 @@
     const stack = v.closest('.sauna-stage, .room-stage');
     return !stack || v.classList.contains('on');
   };
-  const play = v => { if (v.src && playable(v)) { const p = v.play(); if (p) p.catch(() => {}); } };
+  const play = v => { if (v.src && playable(v) && !v.ended) { const p = v.play(); if (p) p.catch(() => {}); } };
+  // data-once の映像は1回だけ流して最後のコマで止める。映像を出さない設定のときは最後のコマの静止画にする
+  lv.forEach(v => { if (v.hasAttribute('data-once') && noVideo && v.dataset.end) v.poster = v.dataset.end; });
   const loadIO = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return;
     const v = e.target;
@@ -135,7 +137,12 @@
     const v = e.target;
     if (e.isIntersecting) { visible.add(v); play(v); } else { visible.delete(v); v.pause(); }
   }), { threshold: 0.12 });
-  lv.forEach(v => { loadIO.observe(v); playIO.observe(v); });
+  // 1回だけの映像は、6割以上見えてから流す（途中から見ることにならないように）
+  const onceIO = new IntersectionObserver(es => es.forEach(e => {
+    const v = e.target;
+    if (e.isIntersecting) { visible.add(v); play(v); } else { visible.delete(v); v.pause(); }
+  }), { threshold: 0.6 });
+  lv.forEach(v => { loadIO.observe(v); (v.hasAttribute('data-once') ? onceIO : playIO).observe(v); });
 
   /* ---------- スクロールで現れる ---------- */
   const rvIO = new IntersectionObserver(es => es.forEach(e => {
@@ -148,42 +155,72 @@
   }), { rootMargin: '0px 0px -8% 0px' });
   $$('.rv').forEach(el => rvIO.observe(el));
 
-  /* ---------- ある一日：PCは縦スクロールで横に流す ---------- */
-  const day = $('.day'), track = $('.day-track'), dayBar = $('.day-progress i');
-  const mqPin = matchMedia('(min-width: 900px) and (prefers-reduced-motion: no-preference)');
-  let dist = 0;
-  const measure = () => {
-    if (mqPin.matches) {
-      day.classList.add('pin-on');
-      track.style.transform = '';
-      const last = track.lastElementChild;
-      const gut = parseFloat(getComputedStyle(track).paddingLeft) || 0;
-      dist = Math.max(0, last.offsetLeft + last.offsetWidth + gut - innerWidth);
-      day.style.height = `${innerHeight + dist}px`;
-    } else {
-      day.classList.remove('pin-on');
-      day.style.height = '';
-      track.style.transform = '';
-      dist = 0;
-    }
-    pinScroll();
-  };
-  const pinScroll = () => {
-    if (!day.classList.contains('pin-on')) return;
-    const r = day.getBoundingClientRect();
-    const p = clamp(-r.top / Math.max(1, day.offsetHeight - innerHeight), 0, 1);
-    track.style.transform = `translate3d(${-p * dist}px,0,0)`;
-    dayBar.style.transform = `scaleX(${p})`;
-  };
-  track.addEventListener('scroll', () => {
-    if (day.classList.contains('pin-on')) return;
-    const max = track.scrollWidth - track.clientWidth;
-    dayBar.style.transform = `scaleX(${max > 0 ? track.scrollLeft / max : 0})`;
-  }, { passive: true });
-  addEventListener('scroll', pinScroll, { passive: true });
-  addEventListener('resize', measure);
-  addEventListener('load', measure);
-  measure();
+  /* ---------- ひとコマ：読み進めると時刻が進み、背景の色が変わる ---------- */
+  const day = $('#day');
+  if (day) {
+    const chs = $$('.ch', day);
+    const stops = $$('.dbar-stops a', day);
+    const tEl = $('.dbar-time', day), lEl = $('.dbar-label', day);
+    const fill = $('.dbar-fill', day), orb = $('.dbar-orb', day);
+    const anchors = $$('[data-t]', day).map(el => ({ el, t: +el.dataset.t }));
+    // バーの区切り（チェックイン・夕食まで・夕食/夜・就寝・朝・チェックアウト）の時刻。翌日は +1440 分
+    const STOP_T = [900, 960, 1080, 1320, 1860, 2040];
+    const pad = n => String(n).padStart(2, '0');
+    const fmt = m => {
+      m = ((Math.round(m / 5) * 5) % 1440 + 1440) % 1440;
+      return pad(Math.floor(m / 60)) + ':' + pad(m % 60);
+    };
+    // 時刻 → バー上の位置（各区切りの文字の真ん中に合わせる）
+    const pos = t => {
+      const n = STOP_T.length;
+      for (let i = 0; i < n - 1; i++) {
+        if (t < STOP_T[i + 1]) return (i + 0.5 + clamp((t - STOP_T[i]) / (STOP_T[i + 1] - STOP_T[i]), 0, 1)) / n;
+      }
+      return (n - 0.5) / n;
+    };
+    let cur = 1, shown = '';
+    const setCh = n => {
+      if (n === cur) return;
+      cur = n;
+      day.dataset.ch = n;
+      stops.forEach((a, i) => a.classList.toggle('on', i + 1 === n));
+      lEl.textContent = chs[n - 1].dataset.label;
+    };
+    const update = () => {
+      const r = day.getBoundingClientRect();
+      if (r.bottom < 0 || r.top > innerHeight) return;
+      const line = innerHeight * 0.55;
+      let n = 1;
+      chs.forEach((c, i) => { if (c.getBoundingClientRect().top <= line) n = i + 1; });
+      setCh(n);
+      // 画面の55%の位置を通り過ぎた時刻と次の時刻のあいだを、読み進めた分だけ進める
+      let t = anchors[0].t;
+      for (let i = 0; i < anchors.length; i++) {
+        const top = anchors[i].el.getBoundingClientRect().top;
+        if (top > line) {
+          if (i > 0) {
+            const prev = anchors[i - 1], pt = prev.el.getBoundingClientRect().top;
+            t = prev.t + clamp((line - pt) / Math.max(1, top - pt), 0, 1) * (anchors[i].t - prev.t);
+          }
+          break;
+        }
+        t = anchors[i].t;
+      }
+      const s = fmt(t);
+      if (s !== shown) { tEl.textContent = s; shown = s; }
+      const p = pos(t);
+      fill.style.transform = 'scaleX(' + p + ')';
+      orb.style.left = (p * 100) + '%';
+      const h = (t % 1440) / 60;
+      orb.classList.toggle('moon', h >= 18 || h < 6);
+    };
+    let raf = 0;
+    const onDay = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); };
+    addEventListener('scroll', onDay, { passive: true });
+    addEventListener('resize', onDay);
+    addEventListener('load', onDay);
+    update();
+  }
 
   /* ---------- サウナ：読み進めると映像が切り替わる ---------- */
   const stage = $('.sauna-stage');
